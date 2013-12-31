@@ -57,13 +57,14 @@ Cement ', '8270': 'Buruj ', '1050': 'Saudi Fransi ', '1810':
 , '2080': 'Gas ', '4010': 'Hotels ', '2002': 'Petrochem ', '2001': 
 'CHEMANOL '}
 
-__SITE="http://www.tadawul.com.sa/wps/portal/!ut/p/c1/04_SB8K8xLLM9MSSzPy8xBz9CP0os3g_A-ewIE8TIwODYFMDA08Tn7AQZx93YwMjM6B8JG55AwOSdLsHhJmC5IONggO8jA08jQjoDk7N0_fzyM9N1S_IDY0od1RUBABj6OCs/dl2/d1/L2dJQSEvUUt3QS9ZQnB3LzZfTjBDVlJJNDIwRzE5MTBJS1NROVUyQTIwSjc!/?tabOrder=1&symbol=%s"#notic the %s for string replacement
 
 class Analyze(object):
 	def __init__(self,listOfCompanyCode):
 		''' should pass a list  of company code , at least one element (for individual company !)'''
 		self.CompanyCodes = listOfCompanyCode
-	def __isMarketOpen(self):
+		self.DictionaryOfData={}
+		self.__SITE="http://www.tadawul.com.sa/wps/portal/!ut/p/c1/04_SB8K8xLLM9MSSzPy8xBz9CP0os3g_A-ewIE8TIwODYFMDA08Tn7AQZx93YwMjM6B8JG55AwOSdLsHhJmC5IONggO8jA08jQjoDk7N0_fzyM9N1S_IDY0od1RUBABj6OCs/dl2/d1/L2dJQSEvUUt3QS9ZQnB3LzZfTjBDVlJJNDIwRzE5MTBJS1NROVUyQTIwSjc!/?tabOrder=1&symbol=%s"#notic the %s for string replacement
+	def isMarketOpen(self):
 		''' check the current time and compare it with time for Market to be open [from 11am to 3:30pm] 
 		    return True when the current time at this interval[11am,3:30pm] ,else false
 		'''
@@ -84,11 +85,16 @@ class Analyze(object):
 		'''
 		will loop over all company you've choosed and fetch Data and parse it
 		'''
+		for company in self.CompanyCodes:
+			Data = urllib.urlopen(self.__SITE%company).read()
+			self.DictionaryOfData[company] = Data
 	def FetchWhileMarketOpen(self,Sleep=0.5):
 		'''
 		Fetch then parse data while the Market is open
 		Sleep:time for sleep between two fetch 
 		'''
+
+
 
 
 if __name__=='__main__':
@@ -106,11 +112,14 @@ if __name__=='__main__':
 		Codes = Codes.replace(" ","").split(",")
 		#checking if all Codes are valid
 		if False  in [__Company.has_key(SingleCode) for SingleCode in Codes]:
-			#NOTE !! print should be changed !
+			#NOTE !! print should be changed ! <NOT Compatable with Windows CMD>
 			print "\033[1;41m[-]One of your Codes is invalid make sure that all your entered code is correct\033[1;m\nBye!"
 		else:
 			#create object ..etc
-			pass
+			test = Analyze(Codes)
+			test.Fetch()
+			print test.DictionaryOfData[Codes[0]]
+			
 			
 		
 	else:
