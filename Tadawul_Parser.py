@@ -64,9 +64,17 @@ class Analyze(object):
 		''' should pass a list  of company code , at least one element (for individual company !)'''
 		self.CompanyCodes = listOfCompanyCode
 	def __isMarketOpen(self):
-		''' check the current time and compare it with time for Market to be open [from 9am to 2pm] 
-		    return True when the current time at this interval[9am,2pm] ,else false
+		''' check the current time and compare it with time for Market to be open [from 11am to 3:30pm] 
+		    return True when the current time at this interval[11am,3:30pm] ,else false
 		'''
+		#TODO:Next Version Add Eid's and Saudi national Day To be Closed
+		CurrentTime = time.localtime()
+		if (11<=CurrentTime[3]<15):
+			return True
+		elif (CurrentTime==CurrentTime[3] == 15 and CurrentTime[4]<=30):
+			return True
+		return False
+		
 	
 	def Print(self,inputs):
 		'''
